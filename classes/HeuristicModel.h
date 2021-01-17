@@ -6,6 +6,7 @@
 #define BIKEREDISTRIBUTIONHEURISTIC_HEURISTICMODEL_H
 
 #include <vector>
+#include <unordered_map>
 #include "Vehicle.h"
 #include "Station.h"
 #include "stdio.h"
@@ -21,7 +22,7 @@ public:
         vehicles = vector<Vehicle>(nVehicles, Vehicle(0));
 
         //initialize the distance between stores and store demands
-        for(int i=1; i<noOfStations+1; i++){
+        for(int i=0; i<noOfStations+1; i++){
             for(int j=i; j<noOfStations+1; j++){
                 if(i==j)
                     distanceMatrix[i][j] = 0;
@@ -49,7 +50,8 @@ public:
         }
     }
     void printModelDetails();
-    int getRandomDistance(int max){
+    unordered_map<string, vector<int>> analyzeOptimalRoute(vector<int> optimalRoute);
+        int getRandomDistance(int max){
         return rand() % max + 1;
     }
     int getRandomDemand(int max){

@@ -36,5 +36,43 @@ void HeuristicModel::printModelDetails(){
         }
         cout << endl;
     }
+}
+
+
+unordered_map<string, vector<int>> HeuristicModel::analyzeOptimalRoute(vector<int> optimalRoute){
+    unordered_map<string, vector<int>> distribution;
+    vector<int> route;
+    int tripsCount =0;
+    int totalDistance = 0;
+    for(int v; v < vehicles.size(); v++){
+        Vehicle currentV = vehicles[v];
+        route.push_back(0);
+        tripsCount=0;
+        totalDistance=0;
+        int availableCapacity = currentV.getCapacity();
+        for(int i=0; i < optimalRoute.size(); i++){
+            int stationCapacity = stations[optimalRoute[i]-1].getDemand();
+            if(availableCapacity - stationCapacity >= 0){
+                route.push_back(optimalRoute[i]);
+                auto indexOf = find(route.begin(), route.end(), optimalRoute[i]);
+                indexOf--;
+                //totalDistance+=distanceMatrix[route.get(route.indexOf(optimalRoute[i])-1)][optimalRoute[i]];
+                totalDistance+=distanceMatrix[*indexOf][optimalRoute[i]];
+                availableCapacity = availableCapacity - stationCapacity;
+            }
+            else {
+                tripsCount++;
+                availableCapacity = vehicles[v].getCapacity();
+                route.push_back(0);
+                totalDistance+=distanceMatrix[optimalRoute[i-1]][0];
+                i--;
+            }
+        }
+        route.push_back(0);
+        tripsCount++;
+        string key = "VehicleCap:"+ to_string(vehicles[v].getCapacity()) + ",Trips:" + to_string(tripsCount) + ",TotalDistance:" + to_string(totalDistance);
+        distribution[key] = route;
+    }
+    return distribution;
 
 }
