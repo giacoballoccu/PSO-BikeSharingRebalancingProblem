@@ -4,7 +4,10 @@
 
 #ifndef BIKEREDISTRIBUTIONHEURISTIC_SWARM_H
 #define BIKEREDISTRIBUTIONHEURISTIC_SWARM_H
-
+#include <vector>
+#include "stdio.h"
+#include "iostream"
+using namespace std;
 
 class Swarm {
 
