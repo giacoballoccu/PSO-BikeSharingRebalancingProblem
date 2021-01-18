@@ -15,12 +15,14 @@ private:
     vector<double> xSolution;
 
     double xFitnessValue;
+
     vector<double> pVelocity;
     vector<double> pBestVelocity;
 
     vector<double> pBest;
     double pBestValue;
 public:
+    Particle(){};
     Particle(vector<int> x){
             xSolution = PSOutils::copyVecIntToVecDouble(x);
             pBest = xSolution;
@@ -43,6 +45,14 @@ public:
     const vector<double> &getPBest() const;
 
     double getPBestValue() const;
+
+    void setPBestValue(double pBestValue){
+        Particle::pBestValue = pBestValue;
+    }
+
+    void setXFitnessValue(double xFitnessValue){
+        Particle::xFitnessValue = xFitnessValue;
+    }
 
 };
 ostream& operator<<(ostream& os, const Particle& p);

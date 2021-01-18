@@ -51,3 +51,4 @@ const vector<double> &Particle::getPBest() const {
 double Particle::getPBestValue() const {
     return pBestValue;
 }
+
