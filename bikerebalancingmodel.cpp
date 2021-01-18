@@ -2,7 +2,7 @@
 // Created by Giacomo Balloccu on 17/01/2021.
 //
 
-#include "BikeRebalancingModel.h"
+#include "bikeRebalancingmodel.h"
 #include "stdio.h"
 #include "iostream"
 void BikeRebalancingModel::printModelDetails(){

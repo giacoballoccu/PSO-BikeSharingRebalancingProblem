@@ -7,8 +7,8 @@
 
 #include <vector>
 #include <unordered_map>
-#include "Vehicle.h"
-#include "Station.h"
+#include "vehicle.h"
+#include "station.h"
 #include "stdio.h"
 #include "iostream"
 using namespace std;
