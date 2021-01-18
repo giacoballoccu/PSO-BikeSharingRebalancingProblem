@@ -15,15 +15,15 @@ using namespace std;
 class HeuristicModel {
 public:
     HeuristicModel(int nStations, vector<int> vehicleCapacity, int nVehicles ,int msd, int msr){
-        noOfStations = nStations;
-        noOfVehicles = nVehicles;
+        nOfStations = nStations;
+        nOfVehicles = nVehicles;
         distanceMatrix = vector<vector<double>>(nStations+1, vector<double>(nStations+1, 0));
         stations = vector<Station>(nStations, Station(0));
         vehicles = vector<Vehicle>(nVehicles, Vehicle(0));
 
         //initialize the distance between stores and store demands
-        for(int i=0; i<noOfStations+1; i++){
-            for(int j=i; j<noOfStations+1; j++){
+        for(int i=0; i<nOfStations+1; i++){
+            for(int j=i; j<nOfStations+1; j++){
                 if(i==j)
                     distanceMatrix[i][j] = 0;
                 else
@@ -31,7 +31,7 @@ public:
             }
         }
 
-        for(int i=0; i<noOfStations; i++){
+        for(int i=0; i<nOfStations; i++){
             int demand = getRandomDemand(msd);
             int rec = getRandomDemand(msr);
             if( rec > demand){
@@ -45,7 +45,7 @@ public:
         }
 
         //initialize capacity of each Vehicle
-        for(int i=0; i<noOfVehicles; i++){
+        for(int i=0; i<nOfVehicles; i++){
             vehicles[i] = Vehicle(vehicleCapacity[i]);
         }
     }
@@ -58,10 +58,22 @@ public:
         return rand() % max + 1;
     }
 private:
-    int noOfStations;
-    int noOfVehicles;
+    int nOfStations;
+    int nOfVehicles;
 
     vector<vector<double>> distanceMatrix;
+public:
+    int getNOfStations() const;
+
+    int getNOfVehicles() const;
+
+    const vector<vector<double>> &getDistanceMatrix() const;
+
+    const vector<Station> &getStations() const;
+
+    const vector<Vehicle> &getVehicles() const;
+
+private:
     vector<Station> stations;
     vector<Vehicle> vehicles;
 };

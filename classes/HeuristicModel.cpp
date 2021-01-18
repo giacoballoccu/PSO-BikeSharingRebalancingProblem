@@ -7,12 +7,12 @@
 #include "iostream"
 void HeuristicModel::printModelDetails(){
 
-    cout << "No Of Stores : " << noOfStations << endl;
+    cout << "No Of Stores : " << nOfStations << endl;
     cout << "Store Details : ";
     for(Station s: stations)
         cout << s << " ";
     cout << "\n";
-    cout << "No Of Vehicles : "  << noOfVehicles << endl;
+    cout << "No Of Vehicles : "  << nOfVehicles << endl;
     for(Vehicle v: vehicles)
         cout << v << " ";
     cout << "\n";
@@ -24,7 +24,7 @@ void HeuristicModel::printModelDetails(){
 
     for(int i=0; i<distanceMatrix.size(); i++){
         string name;
-        if(i == 0 or i == noOfStations){
+        if(i == 0 or i == nOfStations){
             name = "Depot\t";
         }else{
             name = "Station";
@@ -75,4 +75,24 @@ unordered_map<string, vector<int>> HeuristicModel::analyzeOptimalRoute(vector<in
     }
     return distribution;
 
+}
+
+int HeuristicModel::getNOfStations() const {
+    return nOfStations;
+}
+
+int HeuristicModel::getNOfVehicles() const {
+    return nOfVehicles;
+}
+
+const vector<vector<double>> &HeuristicModel::getDistanceMatrix() const {
+    return distanceMatrix;
+}
+
+const vector<Station> &HeuristicModel::getStations() const {
+    return stations;
+}
+
+const vector<Vehicle> &HeuristicModel::getVehicles() const {
+    return vehicles;
 }
