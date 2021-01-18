@@ -10,7 +10,7 @@
 #include "iostream"
 #include "math.h"
 #include "Particle.h"
-#include "../classes/HeuristicModel.h"
+#include "../classes/BikeRebalancingModel.h"
 
 
 using namespace std;
@@ -21,8 +21,8 @@ class Swarm {
     vector<double> globalBest;
     vector<double> globalBestVelocities;
     double globalFitnessValue;
-
-    Swarm(HeuristicModel hm, int nOfParticles){
+public:
+    Swarm(BikeRebalancingModel hm, int nOfParticles){
         distanceMatrix = hm.getDistanceMatrix();
 
         int solutionLength = hm.getNOfStations();
@@ -50,9 +50,19 @@ class Swarm {
         globalBestVelocities = vector<double>(solutionLength);
         globalFitnessValue = DBL_MAX;
         findGlobalBest();
+
     }
     double generateFitnessValue(vector<double> currentSolution);
     void findGlobalBest();
+    void optimizeSolutions();
+    vector<int> decodeOptimalSolution();
+    void updateVelocity(Particle p);
+    void updateSolution(Particle p);
+    void printSwarmDetails();
+    void printIterationResults(int t, unordered_map<string, unordered_map<double, double>> particleProgress);
+    vector<Particle>& getParticles(){
+        return particles;
+    }
 };
 
 

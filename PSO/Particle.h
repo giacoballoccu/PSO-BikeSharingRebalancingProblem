@@ -53,7 +53,18 @@ public:
     void setXFitnessValue(double xFitnessValue){
         Particle::xFitnessValue = xFitnessValue;
     }
-
+    void setPBest(vector<double> pBest){
+        Particle::pBest = pBest;
+    }
+    void setPBestVelocity(vector<double> pBestVelocity){
+        Particle::pBestVelocity = pBestVelocity;
+    }
+    void setPVelocity(vector<double> pVelocity){
+        Particle::pVelocity = pVelocity;
+    }
+    void setXSolution(vector<double> xSolution){
+        Particle::xSolution = xSolution;
+    }
 };
 ostream& operator<<(ostream& os, const Particle& p);
 
