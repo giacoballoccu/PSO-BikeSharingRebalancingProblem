@@ -11,6 +11,7 @@ using namespace std;
 
 namespace PSOutils {
     string doubleVectorToString(vector<double> v);
+    string intVectorToString(vector<int> v);
     void KnuthShuffle(vector<int>& arr);
     vector<double> copyVecIntToVecDouble(const vector<int> vec);
 };

@@ -14,6 +14,14 @@ namespace PSOutils{
         }
         return ans;
     }
+    string PSOutils::intVectorToString(vector<int> vec) {
+        string ans;
+        for(int x : vec){
+            ans += to_string(x);
+            ans += ' ';
+        }
+        return ans;
+    }
     // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
     void PSOutils::KnuthShuffle(vector<int>& arr){
         for (int i = arr.size() - 1; i > 0; i--){
