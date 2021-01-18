@@ -18,7 +18,6 @@ public:
     const int getDemand() const{
         return demand;
     }
-    const string to_string() const;
 private:
     int demand;
 };

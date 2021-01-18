@@ -2,8 +2,8 @@
 // Created by Giacomo Balloccu on 17/01/2021.
 //
 
-#ifndef BIKEREDISTRIBUTIONHEURISTIC_HEURISTICMODEL_H
-#define BIKEREDISTRIBUTIONHEURISTIC_HEURISTICMODEL_H
+#ifndef BIKEREDISTRIBUTIONHEURISTIC_BIKEREBALANCINGMODEL_H
+#define BIKEREDISTRIBUTIONHEURISTIC_BIKEREBALANCINGMODEL_H
 
 #include <vector>
 #include <unordered_map>
@@ -12,9 +12,9 @@
 #include "stdio.h"
 #include "iostream"
 using namespace std;
-class HeuristicModel {
+class BikeRebalancingModel {
 public:
-    HeuristicModel(int nStations, vector<int> vehicleCapacity, int nVehicles ,int msd, int msr){
+    BikeRebalancingModel(int nStations, vector<int> vehicleCapacity, int nVehicles , int msd, int msr){
         nOfStations = nStations;
         nOfVehicles = nVehicles;
         distanceMatrix = vector<vector<double>>(nStations+1, vector<double>(nStations+1, 0));
@@ -32,15 +32,7 @@ public:
         }
 
         for(int i=0; i<nOfStations; i++){
-            int demand = getRandomDemand(msd);
-            int rec = getRandomDemand(msr);
-            if( rec > demand){
-                int temp = demand;
-                demand = rec;
-                rec = temp;
-            }
-            else if(rec == demand)
-                rec--;
+            int demand = getRandomDemand(msd, msr);
             stations[i] = Station(demand);
         }
 
@@ -54,8 +46,8 @@ public:
         int getRandomDistance(int max){
         return rand() % max + 1;
     }
-    int getRandomDemand(int max){
-        return rand() % max + 1;
+    int getRandomDemand(int max, int min){
+        return rand() % max + min;
     }
 private:
     int nOfStations;
@@ -79,4 +71,4 @@ private:
 };
 
 
-#endif //BIKEREDISTRIBUTIONHEURISTIC_HEURISTICMODEL_H
+#endif //BIKEREDISTRIBUTIONHEURISTIC_BIKEREBALANCINGMODEL_H

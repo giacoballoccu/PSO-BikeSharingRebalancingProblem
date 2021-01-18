@@ -17,7 +17,6 @@ public:
     const int getCapacity() const {
         return capacity;
     }
-    const string to_string() const;
 private:
     int capacity;
 

@@ -2,10 +2,10 @@
 // Created by Giacomo Balloccu on 17/01/2021.
 //
 
-#include "HeuristicModel.h"
+#include "BikeRebalancingModel.h"
 #include "stdio.h"
 #include "iostream"
-void HeuristicModel::printModelDetails(){
+void BikeRebalancingModel::printModelDetails(){
 
     cout << "No Of Stores : " << nOfStations << endl;
     cout << "Store Details : ";
@@ -39,7 +39,7 @@ void HeuristicModel::printModelDetails(){
 }
 
 
-unordered_map<string, vector<int>> HeuristicModel::analyzeOptimalRoute(vector<int> optimalRoute){
+unordered_map<string, vector<int>> BikeRebalancingModel::analyzeOptimalRoute(vector<int> optimalRoute){
     unordered_map<string, vector<int>> distribution;
     vector<int> route;
     int tripsCount =0;
@@ -77,22 +77,22 @@ unordered_map<string, vector<int>> HeuristicModel::analyzeOptimalRoute(vector<in
 
 }
 
-int HeuristicModel::getNOfStations() const {
+int BikeRebalancingModel::getNOfStations() const {
     return nOfStations;
 }
 
-int HeuristicModel::getNOfVehicles() const {
+int BikeRebalancingModel::getNOfVehicles() const {
     return nOfVehicles;
 }
 
-const vector<vector<double>> &HeuristicModel::getDistanceMatrix() const {
+const vector<vector<double>> &BikeRebalancingModel::getDistanceMatrix() const {
     return distanceMatrix;
 }
 
-const vector<Station> &HeuristicModel::getStations() const {
+const vector<Station> &BikeRebalancingModel::getStations() const {
     return stations;
 }
 
-const vector<Vehicle> &HeuristicModel::getVehicles() const {
+const vector<Vehicle> &BikeRebalancingModel::getVehicles() const {
     return vehicles;
 }
