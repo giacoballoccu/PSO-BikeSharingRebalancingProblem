@@ -1,0 +1,14 @@
+//
+// Created by Giacomo Balloccu on 18/01/2021.
+//
+
+#ifndef BIKEREDISTRIBUTIONHEURISTIC_SWARM_H
+#define BIKEREDISTRIBUTIONHEURISTIC_SWARM_H
+
+
+class Swarm {
+
+};
+
+
+#endif //BIKEREDISTRIBUTIONHEURISTIC_SWARM_H
