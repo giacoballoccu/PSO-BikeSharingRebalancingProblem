@@ -7,8 +7,8 @@
 
 #include <vector>
 #include <unordered_map>
-#include "vehicle.h"
-#include "station.h"
+#include "Vehicle.h"
+#include "Station.h"
 #include "stdio.h"
 #include "iostream"
 using namespace std;
@@ -18,8 +18,8 @@ public:
         nOfStations = nStations;
         nOfVehicles = nVehicles;
         distanceMatrix = vector<vector<double>>(nStations+1, vector<double>(nStations+1, 0));
-        stations = vector<Station>(nStations, Station(0));
-        vehicles = vector<Vehicle>(nVehicles, Vehicle(0));
+        stations = vector<Station>(nStations, Station());
+        vehicles = vector<Vehicle>(nVehicles, Vehicle());
 
         //initialize the distance between stores and store demands
         for(int i=0; i<nOfStations+1; i++){
@@ -27,13 +27,21 @@ public:
                 if(i==j)
                     distanceMatrix[i][j] = 0;
                 else
-                    distanceMatrix[i][j] = distanceMatrix[j][i] = getRandomDistance(50);
+                    distanceMatrix[i][j] = distanceMatrix[j][i] = getRandomDistance(200);
             }
         }
 
         for(int i=0; i<nOfStations; i++){
-            int demand = getRandomDemand(msd, msr);
-            stations[i] = Station(demand);
+            int demand = getRandomDemand(msd);
+            int rec = getRandomDemand(msr);
+            if( rec > demand){
+                int temp = demand;
+                demand = rec;
+                rec = temp;
+            }
+            else if(rec == demand)
+                rec--;
+            stations[i] = Station(demand, rec);
         }
 
         //initialize capacity of each Vehicle
@@ -43,11 +51,12 @@ public:
     }
     void printModelDetails();
     unordered_map<string, vector<int>> analyzeOptimalRoute(vector<int> optimalRoute);
+    unordered_map<string, vector<int>> analyzeOptimalRouteSimultaneous(vector<int> optimalRoute);
         int getRandomDistance(int max){
         return rand() % max + 1;
     }
-    int getRandomDemand(int max, int min){
-        return rand() % max + min;
+    int getRandomDemand(int max){
+        return rand() % max + 1;
     }
 private:
     int nOfStations;

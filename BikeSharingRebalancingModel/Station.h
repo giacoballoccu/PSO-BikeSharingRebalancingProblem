@@ -12,14 +12,19 @@ using namespace std;
 class Station {
 public:
     Station(){};
-    Station(int de) {
-        demand = de;
+    Station(int demand, int offer) {
+        Station::demand = demand;
+        Station::offer = offer;
     }
-    const int getDemand() const{
+    int getDemand() const{
         return demand;
+    }
+    int getOffer() const{
+        return offer;
     }
 private:
     int demand;
+    int offer;
 };
 ostream& operator<<(ostream& os, const Station& s);
 

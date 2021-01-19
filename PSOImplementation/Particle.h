@@ -7,7 +7,7 @@
 #include <vector>
 #include "stdio.h"
 #include "iostream"
-#include "PSOutils.h"
+#include "PSOUtils.h"
 using namespace std;
 
 class Particle {

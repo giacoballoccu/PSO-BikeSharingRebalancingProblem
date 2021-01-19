@@ -8,6 +8,6 @@ using namespace std;
 
 ostream& operator<<(ostream& os, const Station& s)
 {
-    os << "Store [demand=" << s.getDemand() << "]";
+    os << "Store [demand=" << s.getDemand() << "]" << " [offer=" << s.getOffer() << "]";
     return os;
 }

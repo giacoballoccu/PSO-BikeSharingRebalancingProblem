@@ -14,7 +14,7 @@ public:
     Vehicle(int cap){
         capacity = cap;
     }
-    const int getCapacity() const {
+    int getCapacity() const {
         return capacity;
     }
 private:

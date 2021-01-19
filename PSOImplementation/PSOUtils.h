@@ -1,9 +1,5 @@
-//
-// Created by Giacomo Balloccu on 18/01/2021.
-//
-
-#ifndef BIKEREDISTRIBUTIONHEURISTIC_PSOUTILS_H
-#define BIKEREDISTRIBUTIONHEURISTIC_PSOUTILS_H
+#ifndef PSOUTILS_H
+#define PSOUTILS_H
 
 #include "stdio.h"
 #include "vector"

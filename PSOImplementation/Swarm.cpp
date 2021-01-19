@@ -127,9 +127,7 @@ vector<int> Swarm::decodeOptimalSolution(){
 
     for(int i=0; i<globalBest.size() ; i++){
         if(indicies.find(globalBest[i]) == indicies.end())
-            indicies.insert(pair<double, vector<int>>(globalBest[i], vector<int>()));
-
-        indicies[globalBest[i]].push_back(i);
+            indicies[globalBest[i]].push_back(i);
     }
 
     sort(globalBest.begin(), globalBest.end());

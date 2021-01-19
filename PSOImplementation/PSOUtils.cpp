@@ -1,9 +1,5 @@
-//
-// Created by Giacomo Balloccu on 18/01/2021.
-//
-
 #include <string>
-#include "PSOutils.h"
+#include "PSOUtils.h"
 namespace PSOutils{
     /*Convert vector of double into a string useful to cout the results*/
     string PSOutils::doubleVectorToString(vector<double> vec) {
@@ -26,7 +22,7 @@ namespace PSOutils{
     void PSOutils::KnuthShuffle(vector<int>& arr){
         for (int i = arr.size() - 1; i > 0; i--){
             int index = rand() % i+1;
-            swap(arr[index], i);
+            swap(arr[index], arr[i]);
         }
     }
     /*Convert an input vector of int in a vector of double */
@@ -39,3 +35,4 @@ namespace PSOutils{
     }
 
 }
+
