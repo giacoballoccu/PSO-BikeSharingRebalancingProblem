@@ -60,35 +60,44 @@ int Simulator::start() {
     //cout << "Decoding the best solution..." << endl;
     string answer;
     //cin >> answer;
-    if(true){
-        cout << "Decode gBest Solution" << endl;
-        cout << "---------------------------------------------------------" << endl;
-        //Decode the gBest Solution
-        vector<int> optimalRoute =  swarm.decodeOptimalSolution();
-        cout << "Optimal Route : " << PSOutils::intVectorToString(optimalRoute);
+    cout << "Decode gBest Solution" << endl;
+    cout << "---------------------------------------------------------" << endl;
+    //Decode the gBest Solution
+    optimalRoute =  swarm.decodeOptimalSolution();
+    cout << "Optimal Route : " << PSOutils::intVectorToString(optimalRoute);
 
-        cout << "---------------------------------------------------------" << endl;
-        //Print analysis for optimal route for the distribution model
-        cout << "Analysis of Optimal Route for dropOff Only: " << endl;
-        cout << "---------------------------------------------------------" << endl;
-        //GraphWidget *gui = new GraphWidget();
-        unordered_map<string, vector<int>> distributionMap =  brm.analyzeOptimalRoute(optimalRoute);
+    cout << "---------------------------------------------------------" << endl;
+    //Print analysis for optimal route for the distribution model
+    cout << "Analysis of Optimal Route for dropOff Only: " << endl;
+    cout << "---------------------------------------------------------" << endl;
+    //GraphWidget *gui = new GraphWidget();
+    unordered_map<string, vector<int>> distributionMap =  brm.analyzeOptimalRoute(optimalRoute);
 
-        for (auto [k,v] : distributionMap) {
-           cout << k + " -> " + PSOutils::intVectorToString(v) << endl;
-           //gui.displayGraph("Graph"+k, v);
-        }
+    for (auto [k,v] : distributionMap) {
+       cout << k + " -> " + PSOutils::intVectorToString(v) << endl;
+       //gui.displayGraph("Graph"+k, v);
+    }
 
-        cout << "---------------------------------------------------------" << endl;
-        cout << "Analysis of Optimal Route for simultaneously pickup and dropOff: " << endl;
-        cout << "---------------------------------------------------------" << endl;
-        distributionMap = brm.analyzeOptimalRouteSimultaneous(optimalRoute);
-        for (auto [k,v] : distributionMap) {
-            cout << k + " -> " + PSOutils::intVectorToString(v) << endl;
-        }
+    cout << "---------------------------------------------------------" << endl;
+    cout << "Analysis of Optimal Route for simultaneously pickup and dropOff: " << endl;
+    cout << "---------------------------------------------------------" << endl;
+    distributionMap = brm.analyzeOptimalRouteSimultaneous(optimalRoute);
+    for (auto [k,v] : distributionMap) {
+        cout << k + " -> " + PSOutils::intVectorToString(v) << endl;
+    }
 
-   }
-
+    /*Save data into a txt to load and visualize with python*/
+    ofstream outdata;
+    outdata.open("../GraphVisualizer/.nodes.txt");
+    for(Station s : brm.getStations()){
+        outdata << to_string(s.getDemand() - s.getOffer()) << " " << to_string(s.getCoordinates().first)  << " " << to_string(s.getCoordinates().second) << "\n";
+    }
+    outdata.close();
+    outdata.open("../GraphVisualizer/.edges.txt");
+    for (auto [k,v] : distributionMap) {
+        outdata << PSOutils::intVectorToString(v) << "\n";
+    }
+    outdata.close();
     return 0;
 }
 
