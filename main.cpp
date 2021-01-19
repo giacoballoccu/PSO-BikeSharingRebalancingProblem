@@ -1,11 +1,12 @@
-#include "drawable_graphui.h"
 
-#include <QApplication>
+#include "BikeSharingRebalancingModel/Simulator.h"
+
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    drawable_graphUI w;
-    w.show();
-    return a.exec();
+    Simulator *sim = new Simulator();
+    sim->start();
+    //mainWindow.show();
+    delete(sim);
+    return 0;
 }
