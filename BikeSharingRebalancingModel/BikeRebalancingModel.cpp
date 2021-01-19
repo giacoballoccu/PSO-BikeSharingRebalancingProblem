@@ -2,6 +2,7 @@
 // Created by Giacomo Balloccu on 17/01/2021.
 //
 
+#include <iomanip>
 #include "BikeRebalancingModel.h"
 #include "stdio.h"
 #include "iostream"
@@ -16,8 +17,8 @@ void BikeRebalancingModel::printModelDetails(){
     for(Vehicle v: vehicles)
         cout << v << endl;
     cout << "\n";
-    cout << "Distance Matrix : ";
-    cout << "\tDepot\t";
+    cout << "Distance Matrix : \n";
+    cout << "\t\t\tDepot\t";
     for(int k=0; k<stations.size();k++)
         cout << "Station" << (k+1) << "\t";
     cout << endl;
@@ -25,14 +26,16 @@ void BikeRebalancingModel::printModelDetails(){
     for(int i=0; i<distanceMatrix.size(); i++){
         string name;
         if(i == 0){
-            name = "Depot";
+            name = "Depot\t";
         }else{
-            name = "Station";
-            name.push_back(i + '0');
+            name = "Station" + to_string(i);
         }
         cout << name << "\t";
+        std::cout << fixed;
+        std::cout << setprecision(4);
         for(int j=0; j<distanceMatrix.size(); j++){
-            cout << distanceMatrix[i][j] <<  "\t";
+            cout << distanceMatrix[i][j] <<  " \t";
+            if(distanceMatrix[i][j] == 0.0) cout << " ";
         }
         cout << endl;
     }
