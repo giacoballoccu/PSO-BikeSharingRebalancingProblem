@@ -10,7 +10,8 @@ Simulator::Simulator(){};
 int Simulator::start() {
     vector<int> vehicleCapacity = vector<int>(noOfVehicles, 10);
     //model->analyzeOptimalRoute();
-    std::ofstream out("../Results/test1.txt");
+    string filename = to_string(noOfStations) + "Stations" + to_string(noOfVehicles) + "Vehicles" + to_string(vehicleCapacity[0]) + "Capacity" + ".txt";
+    std::ofstream out("../Results/" + filename);
     std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
     std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out.txt!
 
