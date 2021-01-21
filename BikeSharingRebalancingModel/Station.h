@@ -12,26 +12,13 @@ using namespace std;
 class Station {
 public:
     Station(){};
-    Station(int demand, int offer) {
-        Station::demand = demand;
-        Station::offer = offer;
-        int x = rand() % maxX + minX;
-        int y = rand() % maxY + minY;
-        Station::coordinates = make_pair(x,y);
-    }
-    double getDistanceFrom(Station s2);
-    int getDemand() const{
-        return demand;
-    }
-    int getOffer() const{
-        return offer;
-    }
-    pair<int,int> getCoordinates() const{
-        return coordinates;
-    }
+    Station(int demand);
+    double getDistanceFrom(const Station& s2);
+    int getDemand() const;
+    void setDemand(int demand);
+    pair<int,int> getCoordinates() const;
 private:
     int demand;
-    int offer;
     pair<int,int> coordinates;
     int maxX = 100;
     int minX = -100;

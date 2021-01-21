@@ -6,7 +6,24 @@
 #include "Station.h"
 #include "iostream"
 using namespace std;
-double Station::getDistanceFrom(Station s2){
+
+Station::Station(int demand) {
+    Station::demand = demand;
+    int x = rand() % maxX + minX;
+    int y = rand() % maxY + minY;
+    Station::coordinates = make_pair(x,y);
+}
+int Station::getDemand() const{
+    return demand;
+}
+void Station::setDemand(int demand){
+    Station::demand = demand;
+}
+pair<int,int> Station::getCoordinates() const{
+    return coordinates;
+}
+
+double Station::getDistanceFrom(const Station& s2){
     double x = coordinates.first - s2.getCoordinates().first; //calculating number to square in next step
     double y = coordinates.second - s2.getCoordinates().second;
     double dist;
@@ -19,6 +36,13 @@ double Station::getDistanceFrom(Station s2){
 
 ostream& operator<<(ostream& os, const Station& s)
 {
-    os << "Store [demand=" << s.getDemand() << "]" << " [offer=" << s.getOffer() << "]";
+    string node_label;
+    if(s.getDemand() == 0) {
+        os << "Depot [demand=" << s.getDemand() << "]";
+        return os;
+    }else{
+        node_label = s.getDemand() > 0 ? "Dropoff " : "Pickup  ";
+    }
+    os << node_label << " Station [demand=" << s.getDemand() << "]";
     return os;
 }

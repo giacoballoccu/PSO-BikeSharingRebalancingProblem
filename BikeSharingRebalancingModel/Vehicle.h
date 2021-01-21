@@ -11,15 +11,10 @@ using namespace std;
 class Vehicle {
 public:
     Vehicle(){};
-    Vehicle(int cap){
-        capacity = cap;
-    }
-    int getCapacity() const {
-        return capacity;
-    }
+    Vehicle(int cap);
+    int getCapacity() const;
 private:
     int capacity;
-
 };
 ostream& operator<<(ostream& os, const Vehicle& v);
 

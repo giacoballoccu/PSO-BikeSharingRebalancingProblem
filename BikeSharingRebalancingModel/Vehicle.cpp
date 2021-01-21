@@ -4,7 +4,12 @@
 
 #include "Vehicle.h"
 #include "iostream"
-
+Vehicle::Vehicle(int cap){
+    capacity = cap;
+}
+int Vehicle::getCapacity() const {
+    return capacity;
+}
 ostream& operator<<(ostream& os, const Vehicle& v)
 {
     os << "Vehicle [capacity=" << v.getCapacity() << "]";
