@@ -2,29 +2,88 @@
 // Created by Giacomo Balloccu on 18/01/2021.
 //
 
+#include <iomanip>
 #include "Swarm.h"
-/*Need to be adapted according to problem F4 starting and end depot*/
-double Swarm::generateFitnessValue(vector<double> currentSolution){
 
+Swarm::Swarm(BikeRebalancingModel brm, int nOfParticles) {
+    distanceMatrix = brm.getDistanceMatrix();
+
+    int solutionLength = brm.getNOfStations();
+
+// define the possible solution scope
+    vector<int> possibleSolution;
+
+//Check if it's better to initialize or pb
+    for (int i = 0; i < solutionLength; i++) {
+        possibleSolution.push_back(i + 1);
+    }
+
+// initialize the Swarm Particles
+    particles = vector<Particle>(nOfParticles, Particle());
+
+    for (int i = 0; i < nOfParticles; i++) {
+        PSOutils::KnuthShuffle(possibleSolution);
+        particles[i] = Particle(possibleSolution);
+        particles[i].setXFitnessValue(generateFitnessValue(particles[i].getXSolution(), brm));
+        particles[i].setPBestValue(generateFitnessValue(particles[i].getPBest(), brm));
+    }
+
+//find global best
+    globalBest = vector<double>(solutionLength);
+    globalBestVelocities = vector<double>(solutionLength);
+    globalFitnessValue = DBL_MAX;
+    findGlobalBest();
+
+}
+
+/*Need to be adapted according to problem F4 starting and end depot*/
+double Swarm::generateFitnessValue(vector<double> currentSolution, BikeRebalancingModel& brm) {
     int prevStation = 0; // since we will be starting from the depot which has node 0
     double fitnessSum = 0;
-
+    vector<Station> s = brm.getStations();
+    vector<Vehicle> veh = brm.getVehicles();
+    int currentCapacity = 0;
+    int maxCapacity = 0;
+    for(Vehicle x : veh){
+        maxCapacity += x.getCapacity();
+        currentCapacity += x.getCapacity()/2;
+    }
     //return the value of objective function
-    for(int i=0; i<currentSolution.size(); i++){
-        int v = (int)round(currentSolution[i]);
+    for (int i = 0; i < currentSolution.size(); i++) {
+        int v = (int) round(currentSolution[i]);
+        int stationDemand = s[v].getDemand();
+        if(stationDemand == 0) continue;
+        if(currentCapacity - stationDemand < 0) {
+            int residualCapacity = maxCapacity - currentCapacity;
+            s[v].setDemand(stationDemand - residualCapacity);
+            fitnessSum += distanceMatrix[v][0];
+            fitnessSum += distanceMatrix[0][v];
+            currentCapacity = maxCapacity;
+            i--;
+            continue;
+        }else if(currentCapacity - stationDemand > maxCapacity){
+            int residualCapacity = maxCapacity - currentCapacity;
+            s[v].setDemand(stationDemand + residualCapacity);
+            fitnessSum += distanceMatrix[v][0];
+            fitnessSum += distanceMatrix[0][v];
+            currentCapacity = 0;
+            i--;
+            continue;
+        }
+        currentCapacity -= stationDemand;
         fitnessSum += distanceMatrix[prevStation][v];
         prevStation = v;
     }
 
-    fitnessSum += distanceMatrix[prevStation][0]; // add distance back to the depot
+    fitnessSum += distanceMatrix[prevStation][currentSolution.size()]; // add distance back to the final depot
 
     return fitnessSum;
 }
 
-void Swarm::findGlobalBest(){
-    for(Particle p: particles){
+void Swarm::findGlobalBest() {
+    for (Particle p: particles) {
         double currentXFitnessValue = p.getXFitnessValue();
-        if(currentXFitnessValue < globalFitnessValue){
+        if (currentXFitnessValue < globalFitnessValue) {
             globalFitnessValue = currentXFitnessValue;
             globalBest = p.getPBest();
             globalBestVelocities = p.getPBestVelocity();
@@ -32,37 +91,36 @@ void Swarm::findGlobalBest(){
     }
 }
 
-void Swarm::printSwarmDetails(){
-
-
-    cout << "\nNo of Particles : " << particles.size();
+void Swarm::printSwarmDetails() {
+    cout << "No of Particles : " << particles.size();
 
 
     cout << "\nParticle Details : ";
-    for(Particle p: particles)
+    for (Particle p: particles)
         cout << "\n" << p;
 
-    cout << "\n" << "Global   [gBest=" << PSOutils::doubleVectorToString(globalBest) << ", gFitnessValue=" << globalFitnessValue << "]";
+    cout << "\n" << "Global   [gBest=" << PSOutils::doubleVectorToString(globalBest) << ", gFitnessValue="
+         << globalFitnessValue << "]" << endl;
 }
 
-void Swarm::printIterationResults(int t, unordered_map<string, unordered_map<double, double>> particleProgress){
-    cout << t << " \t\t";
+void Swarm::printIterationResults(int t, unordered_map<string, unordered_map<double, double>> particleProgress) {
+    cout << t << " \t\t\t";
     int pNo = 1;
-    for(Particle p: particles){
+    for (Particle p: particles) {
         string key = "p" + to_string(pNo);
-        if(particleProgress.count(key) == 0)
+        if (particleProgress.count(key) == 0)
             particleProgress[key] = unordered_map<double, double>();
-        pair<double,double> toinsert(t, p.getPBestValue());
+        pair<double, double> toinsert(t, p.getPBestValue());
         particleProgress[key].insert(toinsert);
-        cout << to_string(p.getXFitnessValue()) + "\t" + to_string(p.getPBestValue()) + "\t\t";
+        cout << p.getXFitnessValue() << "\t" << p.getPBestValue() << "\t\t";
         pNo++;
     }
     cout << to_string(globalFitnessValue) << "\n";
 }
 
-void Swarm::optimizeSolutions(){
+void Swarm::optimizeSolutions(BikeRebalancingModel& brm) {
 
-    for(Particle p: particles){
+    for (Particle p: particles) {
 
         // find the new velocity
         updateVelocity(p);
@@ -71,10 +129,10 @@ void Swarm::optimizeSolutions(){
         updateSolution(p);
 
         // update the fitness value of the particles
-        p.setXFitnessValue(generateFitnessValue(p.getXSolution()));
+        p.setXFitnessValue(generateFitnessValue(p.getXSolution(), brm));
 
         // update pBest of the particle
-        if(p.getXFitnessValue() < p.getPBestValue()){
+        if (p.getXFitnessValue() < p.getPBestValue()) {
             p.setPBest(p.getXSolution());
             p.setPBestValue(p.getXFitnessValue());
             p.setPBestVelocity(p.getPVelocity());
@@ -88,7 +146,7 @@ void Swarm::optimizeSolutions(){
 
 }
 
-void Swarm::updateVelocity(Particle p){
+void Swarm::updateVelocity(Particle p) {
 
     double w = 0.6;
 
@@ -100,33 +158,36 @@ void Swarm::updateVelocity(Particle p){
 
     vector<double> newV = vector<double>(p.getPVelocity().size());
 
-    for(int i=0; i<newV.size(); i++){
-        newV[i] = w*p.getPVelocity()[i] + (o1*b1*(p.getPBest()[i]-p.getXSolution()[i])) + (o2*b2*(globalBest[i] - p.getXSolution()[i]));
+    for (int i = 0; i < newV.size(); i++) {
+        newV[i] = w * p.getPVelocity()[i] + (o1 * b1 * (p.getPBest()[i] - p.getXSolution()[i])) +
+                  (o2 * b2 * (globalBest[i] - p.getXSolution()[i]));
     }
 
     p.setPVelocity(newV);
 
 }
 
-void Swarm::updateSolution(Particle p){
+void Swarm::updateSolution(Particle p) {
     vector<double> newXSolution = vector<double>(p.getXSolution().size());
 
-    for(int i=0; i<p.getXSolution().size(); i++){
-        newXSolution[i] = p.getXSolution()[i] + p.getPVelocity()[i] > p.getXSolution().size() ? p.getXSolution().size() : p.getXSolution()[i] + p.getPVelocity()[i];
+    for (int i = 0; i < p.getXSolution().size(); i++) {
+        newXSolution[i] =
+                p.getXSolution()[i] + p.getPVelocity()[i] > p.getXSolution().size() ? p.getXSolution().size() :
+                p.getXSolution()[i] + p.getPVelocity()[i];
     }
     p.setXSolution(newXSolution);
 
 }
 
-vector<int> Swarm::decodeOptimalSolution(){
+vector<int> Swarm::decodeOptimalSolution() {
 
     cout << "gFitnessValue=" << globalFitnessValue << endl;
     cout << "gBest=" << PSOutils::doubleVectorToString(globalBest);
 
     unordered_map<double, vector<int>> indicies;
 
-    for(int i=0; i<globalBest.size() ; i++){
-        if(indicies.find(globalBest[i]) == indicies.end())
+    for (int i = 0; i < globalBest.size(); i++) {
+        if (indicies.find(globalBest[i]) == indicies.end())
             indicies[globalBest[i]].push_back(i);
     }
 
@@ -134,16 +195,16 @@ vector<int> Swarm::decodeOptimalSolution(){
 
     vector<int> optimalRoute = vector<int>(globalBest.size());
 
-    for(int i=0; i<optimalRoute.size(); i++){
-        if(indicies[globalBest[i]].size() > 1){
+    for (int i = 0; i < optimalRoute.size(); i++) {
+        if (indicies[globalBest[i]].size() > 1) {
             // find the lowest velocity and add that first
             int ii = i;
-            for(int k=0; k<indicies[globalBest[ii]].size(); k++){
+            for (int k = 0; k < indicies[globalBest[ii]].size(); k++) {
                 optimalRoute[i] = indicies[globalBest[ii]][k] + 1;
                 i++;
             }
 
-        }else
+        } else
             optimalRoute[i] = indicies[globalBest[i]][0] + 1;
     }
 

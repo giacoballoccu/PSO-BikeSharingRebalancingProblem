@@ -2,6 +2,7 @@
 // Created by Giacomo Balloccu on 18/01/2021.
 //
 
+#include <iomanip>
 #include "Particle.h"
 /*Populate the velocities vector with n random velocities*/
 void Particle::initializeRandomVelocities(int n) {
@@ -20,9 +21,10 @@ double Particle::getRandomVelocity(int upperBound) {
 
 ostream& operator<<(ostream& os, const Particle& p)
 {
-    os << "Particle [xSolution=" + PSOutils::doubleVectorToString(p.getXSolution()) + ", xFitnessValue=" + to_string(p.getXFitnessValue()) + ", pBest="
-          + PSOutils::doubleVectorToString(p.getPBest()) + ", pBestValue=" + to_string(p.getPBestValue()) + ", pVelocity=" + PSOutils::doubleVectorToString(p.getPVelocity())
-          + "]";
+    os << std::setprecision(1) << std::fixed;
+    os << "Particle [xSolution=" << PSOutils::doubleVectorToString(p.getXSolution()) << ", xFitnessValue=" << p.getXFitnessValue() << ", pBest="
+          << PSOutils::doubleVectorToString(p.getPBest()) << ", pBestValue=" << p.getPBestValue() << ", pVelocity=" << PSOutils::doubleVectorToString(p.getPVelocity())
+          << "]";
     return os;
 }
 

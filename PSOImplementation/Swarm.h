@@ -22,39 +22,10 @@ class Swarm {
     vector<double> globalBestVelocities;
     double globalFitnessValue;
 public:
-    Swarm(BikeRebalancingModel hm, int nOfParticles){
-        distanceMatrix = hm.getDistanceMatrix();
-
-        int solutionLength = hm.getNOfStations();
-
-        // define the possible solution scope
-        vector<int> possibleSolution;
-
-        //Check if it's better to initialize or pb
-        for(int i=0; i<solutionLength; i++){
-            possibleSolution.push_back(i+1);
-        }
-
-        // initialize the Swarm Particles
-        particles = vector<Particle>(nOfParticles, Particle());
-
-        for(int i=0; i<nOfParticles; i++){
-            PSOutils::KnuthShuffle(possibleSolution);
-            particles[i] = Particle(possibleSolution);
-            particles[i].setXFitnessValue(generateFitnessValue(particles[i].getXSolution()));
-            particles[i].setPBestValue(generateFitnessValue(particles[i].getPBest()));
-        }
-
-        //find global best
-        globalBest = vector<double>(solutionLength);
-        globalBestVelocities = vector<double>(solutionLength);
-        globalFitnessValue = DBL_MAX;
-        findGlobalBest();
-
-    }
-    double generateFitnessValue(vector<double> currentSolution);
+    Swarm(BikeRebalancingModel hm, int nOfParticles);
+    double generateFitnessValue(vector<double> currentSolution, BikeRebalancingModel& brm);
     void findGlobalBest();
-    void optimizeSolutions();
+    void optimizeSolutions(BikeRebalancingModel& brm);
     vector<int> decodeOptimalSolution();
     void updateVelocity(Particle p);
     void updateSolution(Particle p);

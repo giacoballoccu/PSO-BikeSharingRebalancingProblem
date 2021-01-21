@@ -9,6 +9,7 @@ namespace PSOutils {
     string doubleVectorToString(vector<double> v);
     string intVectorToString(vector<int> v);
     void KnuthShuffle(vector<int>& arr);
+    double normalizeValue(int min, int max);
     vector<double> copyVecIntToVecDouble(const vector<int> vec);
 };
 

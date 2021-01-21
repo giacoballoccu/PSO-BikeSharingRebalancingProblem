@@ -1,14 +1,16 @@
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include "PSOUtils.h"
 namespace PSOutils{
     /*Convert vector of double into a string useful to cout the results*/
     string PSOutils::doubleVectorToString(vector<double> vec) {
-        string ans;
+        ostringstream os;
+        os << setprecision(1) << fixed;
         for(double x : vec){
-            ans += to_string(x);
-            ans += ' ';
+            os << x << " ";
         }
-        return ans;
+        return os.str();
     }
     string PSOutils::intVectorToString(vector<int> vec) {
         string ans;
@@ -33,6 +35,7 @@ namespace PSOutils{
         }
         return ans;
     }
+
 
 }
 
