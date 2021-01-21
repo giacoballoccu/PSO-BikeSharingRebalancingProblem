@@ -11,12 +11,14 @@ class Simulator
 public:
     Simulator();
     int start();
-    int noOfStations = 12;
+    void readFromDataset(string path);
+    int noOfStations = 4;
     int noOfVehicles = 1;
-    int MAXIMUM_STATION_DEMAND = 6;
-    int MAXIMUM_STATION_OFFERT = 6;
-    int N_PARTICLES = 3;
-    int N_ITERATIONS = 100;
+    int MAXIMUM_STATION_DEMAND = 7;
+    int N_PARTICLES = 7;
+    int N_ITERATIONS = 12;
+    int DEPOT_DEMAND = 5;
+    vector<int> vehicleCapacity = {10};
 };
 
 #endif // SIMULATOR_H

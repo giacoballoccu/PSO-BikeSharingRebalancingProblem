@@ -8,32 +8,32 @@ Simulator::Simulator(){};
 
 
 int Simulator::start() {
-    vector<int> vehicleCapacity = vector<int>(noOfVehicles, 10);
-    //model->analyzeOptimalRoute();
+    cout << setprecision(1) << fixed;
     string filename = to_string(noOfStations) + "Stations" + to_string(noOfVehicles) + "Vehicles" + to_string(vehicleCapacity[0]) + "Capacity" + ".txt";
     std::ofstream out("../Results/" + filename);
     std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
     std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out.txt!
 
 
-    cout << "---------------------------------------------------------";
-    cout << "Bike Rebalacing Model";
-    cout << "---------------------------------------------------------";
+    cout << "---------------------------------------------------------" << "\n";
+    cout << "Bike Rebalacing Model" << "\n";
+    cout << "---------------------------------------------------------" << "\n";
 
     //Design the distribution model for the problem
-    BikeRebalancingModel brm = BikeRebalancingModel(noOfStations, vehicleCapacity, noOfVehicles, MAXIMUM_STATION_DEMAND, MAXIMUM_STATION_OFFERT);
+    BikeRebalancingModel brm = BikeRebalancingModel(noOfStations, vehicleCapacity, noOfVehicles, MAXIMUM_STATION_DEMAND, DEPOT_DEMAND);
     brm.printModelDetails();
-    cout << "---------------------------------------------------------" << endl;
-
-    cout << "Swarm Model";
-    cout << "---------------------------------------------------------" << endl;
+    bool isFeasible = brm.isProblemFeasible();
+    cout << "Is problem feasible? " << (isFeasible ? "Yes" : "No") << endl;
+    if(!isFeasible) return 0;
+    cout << "---------------------------------------------------------" << "\n";
+    cout << "Swarm Model" << "\n";
+    cout << "---------------------------------------------------------" << "\n";
     //Initialize the swarm for the distribution model
-    Swarm swarm = Swarm(brm, noOfStations);
+    Swarm swarm = Swarm(brm, N_PARTICLES);
     swarm.printSwarmDetails();
-    cout << "---------------------------------------------------------" << endl;
-
-    cout << "Iterations Details" << endl;
-    cout << "---------------------------------------------------------" << endl;
+    cout << "---------------------------------------------------------" << "\n";
+    cout << "Iterations Details" << "\n";
+    cout << "---------------------------------------------------------" << "\n";
     unordered_map<string, unordered_map<double, double>> particleProgress;
 
     //print iteration 0 results
@@ -41,56 +41,36 @@ int Simulator::start() {
     for(int i=0; i<swarm.getParticles().size(); i++)
         cout << "f(x:"+ to_string(i+1) + ") f(pBest:"+ to_string(i+1) + ")\t";
 
-    cout << "f(gBest)" << endl;
+    cout << "f(gBest)" << "\n";
     swarm.printIterationResults(0, particleProgress);
 
 
     //Optimize the solution and return the best solution after the iterations terminate
     for(int t=1; t<=N_ITERATIONS;t++){
-        swarm.optimizeSolutions();
+        swarm.optimizeSolutions(brm);
         swarm.printIterationResults(t, particleProgress);
     }
-    cout << endl << "---------------------------------------------------------" << endl;
-
-    cout << "Decode gBest Solution\n";
-    cout << "---------------------------------------------------------" << endl;
+    //Decode the gBest Solution
+    cout << "---------------------------------------------------------" << "\n";
+    cout << "Decode gBest Solution" << "\n";
+    cout << "---------------------------------------------------------" << "\n";
     //Decode the gBest Solution
     vector<int> optimalRoute =  swarm.decodeOptimalSolution();
-    cout << "Optimal Route : " << PSOutils::intVectorToString(optimalRoute);
-    //cout << "Decoding the best solution..." << endl;
-    string answer;
-    //cin >> answer;
-    cout << "Decode gBest Solution" << endl;
-    cout << "---------------------------------------------------------" << endl;
-    //Decode the gBest Solution
-    optimalRoute =  swarm.decodeOptimalSolution();
-    cout << "Optimal Route : " << PSOutils::intVectorToString(optimalRoute);
+    cout << "Optimal Route : " << "0 " << PSOutils::intVectorToString(optimalRoute) << noOfStations+1 << "\n";
 
-    cout << "---------------------------------------------------------" << endl;
-    //Print analysis for optimal route for the distribution model
-    cout << "Analysis of Optimal Route for dropOff Only: " << endl;
-    cout << "---------------------------------------------------------" << endl;
-    //GraphWidget *gui = new GraphWidget();
-    unordered_map<string, vector<int>> distributionMap =  brm.analyzeOptimalRoute(optimalRoute);
-
+    cout << "---------------------------------------------------------" << "\n";
+    cout << "Analysis of Optimal Route for simultaneously pickup and dropOff: " << "\n";
+    cout << "---------------------------------------------------------" << "\n";
+    unordered_map<string, vector<int>> distributionMap = brm.analyzeOptimalRouteSimultaneous(optimalRoute);
     for (auto [k,v] : distributionMap) {
-       cout << k + " -> " + PSOutils::intVectorToString(v) << endl;
-       //gui.displayGraph("Graph"+k, v);
-    }
-
-    cout << "---------------------------------------------------------" << endl;
-    cout << "Analysis of Optimal Route for simultaneously pickup and dropOff: " << endl;
-    cout << "---------------------------------------------------------" << endl;
-    distributionMap = brm.analyzeOptimalRouteSimultaneous(optimalRoute);
-    for (auto [k,v] : distributionMap) {
-        cout << k + " -> " + PSOutils::intVectorToString(v) << endl;
+        cout << k << " -> " << PSOutils::intVectorToString(v) << "\n";
     }
 
     /*Save data into a txt to load and visualize with python*/
     ofstream outdata;
     outdata.open("../GraphVisualizer/.nodes.txt");
     for(Station s : brm.getStations()){
-        outdata << to_string(s.getDemand() - s.getOffer()) << " " << to_string(s.getCoordinates().first)  << " " << to_string(s.getCoordinates().second) << "\n";
+        outdata << to_string(s.getDemand()) << " " << to_string(s.getCoordinates().first)  << " " << to_string(s.getCoordinates().second) << "\n";
     }
     outdata.close();
     outdata.open("../GraphVisualizer/.edges.txt");
@@ -101,4 +81,7 @@ int Simulator::start() {
     return 0;
 }
 
+void Simulator::readFromDataset(string path){
+
+}
 
