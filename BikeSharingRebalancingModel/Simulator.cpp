@@ -6,21 +6,25 @@
 #include <string>
 Simulator::Simulator(){};
 
+int Simulator::start(string filename) {
+    //Design the distribution model for the problem, if the simulator is called with a file construct from it
+    BikeRebalancingModel brm = (filename == "")
+                               ? BikeRebalancingModel(noOfStations, vehicleCapacity, noOfVehicles, MAXIMUM_STATION_DEMAND)
+                               : BikeRebalancingModel(filename);
+    noOfStations = brm.getNOfStations();
+    noOfVehicles = brm.getNOfVehicles();
 
-int Simulator::start() {
+    /*Setup logger to file*/
     cout << setprecision(1) << fixed;
-    string filename = to_string(noOfStations) + "Stations" + to_string(noOfVehicles) + "Vehicles" + to_string(vehicleCapacity[0]) + "Capacity" + ".txt";
-    std::ofstream out("../Results/" + filename);
+    string logname = to_string(noOfStations) + "Stations" + to_string(noOfVehicles) + "Vehicles" + to_string(vehicleCapacity[0]) + "Capacity" + ".txt";
+    std::ofstream out("../Results/" + logname);
     std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
     std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out.txt!
-
 
     cout << "---------------------------------------------------------" << "\n";
     cout << "Bike Rebalacing Model" << "\n";
     cout << "---------------------------------------------------------" << "\n";
 
-    //Design the distribution model for the problem
-    BikeRebalancingModel brm = BikeRebalancingModel(noOfStations, vehicleCapacity, noOfVehicles, MAXIMUM_STATION_DEMAND, DEPOT_DEMAND);
     brm.printModelDetails();
     bool isFeasible = brm.isProblemFeasible();
     cout << "Is problem feasible? " << (isFeasible ? "Yes" : "No") << endl;
@@ -68,11 +72,13 @@ int Simulator::start() {
 
     /*Save data into a txt to load and visualize with python*/
     ofstream outdata;
+    remove("../GraphVisualizer/.nodes.txt");
     outdata.open("../GraphVisualizer/.nodes.txt");
     for(Station s : brm.getStations()){
         outdata << to_string(s.getDemand()) << " " << to_string(s.getCoordinates().first)  << " " << to_string(s.getCoordinates().second) << "\n";
     }
     outdata.close();
+    remove("../GraphVisualizer/.edges.txt");
     outdata.open("../GraphVisualizer/.edges.txt");
     for (auto [k,v] : distributionMap) {
         outdata << PSOutils::intVectorToString(v) << "\n";

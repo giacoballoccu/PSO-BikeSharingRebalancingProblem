@@ -10,15 +10,14 @@ class Simulator
 {
 public:
     Simulator();
-    int start();
+    int start(string filename="");
     void readFromDataset(string path);
-    int noOfStations = 4;
-    int noOfVehicles = 1;
-    int MAXIMUM_STATION_DEMAND = 7;
-    int N_PARTICLES = 7;
+    int noOfStations = 15;
+    int noOfVehicles = 2;
+    int MAXIMUM_STATION_DEMAND = 10;
+    int N_PARTICLES = 30;
     int N_ITERATIONS = 12;
-    int DEPOT_DEMAND = 5;
-    vector<int> vehicleCapacity = {10};
+    vector<int> vehicleCapacity = {15, 15};
 };
 
 #endif // SIMULATOR_H

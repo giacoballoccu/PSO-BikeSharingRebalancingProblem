@@ -16,18 +16,12 @@ using namespace std;
 
 class BikeRebalancingModel {
 public:
-    BikeRebalancingModel(int nStations, vector<int> vehicleCapacity, int nVehicles, int msd, int depotDemand);
+    BikeRebalancingModel(string filename);
+    BikeRebalancingModel(int nStations, vector<int> vehicleCapacity, int nVehicles, int msd);
     void printModelDetails();
     unordered_map<string, vector<int>> analyzeOptimalRoute(vector<int> optimalRoute);
     unordered_map<string, vector<int>> analyzeOptimalRouteSimultaneous(vector<int> optimalRoute);
     int getRandomDemand(const int max) const;
-
-private:
-    int nOfStations;
-    int nOfVehicles;
-
-    vector<vector<double>> distanceMatrix;
-public:
     bool isProblemFeasible();
     int getNOfStations() const;
 
@@ -42,6 +36,9 @@ public:
 private:
     vector<Station> stations;
     vector<Vehicle> vehicles;
+    int nOfStations;
+    int nOfVehicles;
+    vector<vector<double>> distanceMatrix;
 };
 
 

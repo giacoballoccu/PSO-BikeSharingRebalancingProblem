@@ -3,15 +3,44 @@
 //
 
 #include <iomanip>
+#include <fstream>
 #include "BikeRebalancingModel.h"
 #include "stdio.h"
 #include "iostream"
 
-BikeRebalancingModel::BikeRebalancingModel(int nStations, vector<int> vehicleCapacity, int nVehicles, int msd,
-                                           int depotDemand) {
+BikeRebalancingModel::BikeRebalancingModel(string filename) {
+    ifstream file;
+    file.open(filename);
+    if (!file)
+        throw runtime_error("File not found!");
+    file >> nOfStations;
+    int demandValue;
+    vector<Station> stations;
+    for (int i = 0; i < nOfStations; i++) {
+        file >> demandValue;
+        stations.push_back(Station(demandValue));
+    }
+    stations.front() = Station(0), stations.back() = Station(0); //Setting depots
+    BikeRebalancingModel::stations = stations;
+    int vehicleCapacity;
+    file >> vehicleCapacity;
+    nOfVehicles = 2;
+    for (int i = 0; i < nOfVehicles; i++) {
+        vehicles.push_back(Vehicle(vehicleCapacity));
+    }
+    distanceMatrix = vector<vector<double>>(nOfStations, vector<double>(nOfStations, 0));
+    for (int r = 0; r < distanceMatrix.size(); r++) {
+        for (int c = 0; c < distanceMatrix.size(); c++) {
+            file >> distanceMatrix[r][c];
+        }
+    }
+    nOfStations -= 2; //Fix number of stations excluding depots
+}
+
+BikeRebalancingModel::BikeRebalancingModel(int nStations, vector<int> vehicleCapacity, int nVehicles, int msd) {
     nOfStations = nStations;
     nOfVehicles = nVehicles;
-    distanceMatrix = vector<vector<double>>(nStations + 2, vector<double>(nStations + 1, 0));
+    distanceMatrix = vector<vector<double>>(nStations + 2, vector<double>(nStations + 2, 0));
     stations = vector<Station>(nStations + 2, Station());
     vehicles = vector<Vehicle>(nVehicles, Vehicle());
 
@@ -51,8 +80,9 @@ void BikeRebalancingModel::printModelDetails() {
     cout << "\n";
     cout << "Distance Matrix : \n";
     cout << "\t\t\tDepot\t";
-    for (int k = 0; k < stations.size() - 1; k++)
+    for (int k = 0; k < stations.size() - 2; k++)
         cout << "Stat" << (k + 1) << "\t";
+    cout << "Depot";
     cout << endl;
 
     for (int i = 0; i < distanceMatrix.size(); i++) {
@@ -126,7 +156,7 @@ unordered_map<string, vector<int>> BikeRebalancingModel::analyzeOptimalRouteSimu
         route.push_back(0);
         tripsCount = 0;
         totalDistance = 0;
-        int availableCapacity = vehicles[v].getCapacity()/2;
+        int availableCapacity = vehicles[v].getCapacity() / 2;
         int maxCapacity = vehicles[v].getCapacity();
         for (int i = 0; i < optimalRoute.size(); i++) {
             int stationDemand = stations[optimalRoute[i]].getDemand();
