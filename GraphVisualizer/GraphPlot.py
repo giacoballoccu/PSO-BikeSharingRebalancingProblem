@@ -17,13 +17,13 @@ def read_nodes():
     print(nodes)
     return nodes
 def read_edges():
-    optimal_route_str = ""
+    optimal_route_str = "0"
     with open('.edges.txt') as f:
         line = f.readlines()[-1].split()
         edges = []
         for i in range(0,len(line)-1, 2):
             edges.append((line[i], line[i+1]))
-            optimal_route_str = optimal_route_str + "[" + line[i] + " -> " + line[i+1] + "]" + ", "
+            optimal_route_str = optimal_route_str + "->" + line[i+1] + ""
     f.close()
 
     print(edges)
@@ -59,7 +59,7 @@ def main():
     nx.draw_networkx_nodes(G, pos, node_color=color_map,
                             node_size = 500)
     nx.draw_networkx_labels(G, pos, font_color='white')
-    nx.draw_networkx_edges(G, pos, edgelist=G.edges, edge_color=edge_colours, arrows=True, width=1.5, connectionstyle='arc3, rad = 0.2')
+    nx.draw_networkx_edges(G, pos, edgelist=G.edges, edge_color=edge_colours, arrows=True, width=1.5, connectionstyle='arc3, rad = 0.4')
     #nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
     plt.show()
 
