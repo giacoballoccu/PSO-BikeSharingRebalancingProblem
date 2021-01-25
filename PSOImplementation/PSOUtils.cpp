@@ -23,7 +23,7 @@ namespace PSOutils{
     // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
     void PSOutils::KnuthShuffle(vector<int>& arr){
         for (int i = arr.size() - 1; i > 0; i--){
-            int index = rand() % i+1;
+            int index = rand() % i;
             swap(arr[index], arr[i]);
         }
     }
@@ -32,6 +32,13 @@ namespace PSOutils{
         vector<double> ans;
         for(int val : vec) {
             ans.push_back(double(val));
+        }
+        return ans;
+    }
+    vector<int> PSOutils::copyVecDoubleToVecInt(const vector<double> vec){
+        vector<int> ans;
+        for(int val : vec) {
+            ans.push_back(int(val));
         }
         return ans;
     }

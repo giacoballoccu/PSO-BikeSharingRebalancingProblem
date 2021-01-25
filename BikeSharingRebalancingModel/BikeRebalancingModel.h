@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <map>
 #include "Vehicle.h"
 #include "Station.h"
 #include "stdio.h"
@@ -18,11 +19,12 @@ class BikeRebalancingModel {
 public:
     BikeRebalancingModel(string filename);
     BikeRebalancingModel(int nStations, vector<int> vehicleCapacity, int nVehicles, int msd);
+    map<int,Station> dropoffStations;
+    map<int,Station> pickupStations;
     void printModelDetails();
     unordered_map<string, vector<int>> analyzeOptimalRoute(vector<int> optimalRoute);
     unordered_map<string, vector<int>> analyzeOptimalRouteSimultaneous(vector<int> optimalRoute);
     int getRandomDemand(const int max) const;
-    bool isProblemFeasible();
     int getNOfStations() const;
 
     int getNOfVehicles() const;
@@ -35,6 +37,7 @@ public:
 
 private:
     vector<Station> stations;
+
     vector<Vehicle> vehicles;
     int nOfStations;
     int nOfVehicles;

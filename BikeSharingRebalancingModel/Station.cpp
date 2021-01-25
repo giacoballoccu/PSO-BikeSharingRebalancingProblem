@@ -41,7 +41,7 @@ ostream& operator<<(ostream& os, const Station& s)
         os << "Depot [demand=" << s.getDemand() << "]";
         return os;
     }else{
-        node_label = s.getDemand() > 0 ? "Dropoff " : "Pickup  ";
+        node_label = s.getDemand() < 0 ? "Dropoff " : "Pickup  ";
     }
     os << node_label << " Station [demand=" << s.getDemand() << "]";
     return os;

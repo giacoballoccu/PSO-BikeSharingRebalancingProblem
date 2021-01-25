@@ -11,6 +11,7 @@ namespace PSOutils {
     void KnuthShuffle(vector<int>& arr);
     double normalizeValue(int min, int max);
     vector<double> copyVecIntToVecDouble(const vector<int> vec);
+    vector<int> copyVecDoubleToVecInt(const vector<double> vec);
 };
 
 

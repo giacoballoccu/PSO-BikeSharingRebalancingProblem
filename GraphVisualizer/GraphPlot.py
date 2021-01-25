@@ -43,9 +43,14 @@ def main():
     #Set nodes color, red for depots and blue for normal stations
     color_map = ['darkred' if k == '0' or k == str(nNodes-1) else 'blue' for k in nodes.keys()]
     #Set edge color, green for main path, black for fullfill from depot
-    edge_colours = ['grey' if edge[1] == '0' or edge[0] == '0' else 'black' for edge in G.edges()]
-    edge_colours[0] = 'black'
-
+    edge_colours = ['black' if edge[1] == '0' or edge[0] == '0' else 'black' for edge in G.edges()]
+    edge_colours[2] = 'black'
+    edges = list(G.edges())
+    first = edges[0]
+    for x in range(len(edges)-1, 0):
+        if edges[x] == first:
+            edge_colours[x] = 'black'
+            break
     #Set position of nodes according to real positions and set label with demand
     pos = nx.spring_layout(G)
     for k,v in nodes.items():
@@ -59,7 +64,7 @@ def main():
     nx.draw_networkx_nodes(G, pos, node_color=color_map,
                             node_size = 500)
     nx.draw_networkx_labels(G, pos, font_color='white')
-    nx.draw_networkx_edges(G, pos, edgelist=G.edges, edge_color=edge_colours, arrows=True, width=1.5, connectionstyle='arc3, rad = 0.4')
+    nx.draw_networkx_edges(G, pos, edgelist=G.edges, edge_color=edge_colours, arrows=True, width=1.5, connectionstyle='arc3, rad = 0.1')
     #nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
     plt.show()
 
