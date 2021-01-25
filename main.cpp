@@ -5,8 +5,9 @@
 int main(int argc, char *argv[])
 {
     Simulator *sim = new Simulator();
-    //sim->start("../Dataset/21Ottawa30.txt");
-    sim->start();
+    string filename = "3Bari10.txt";
+    sim->start("../Dataset/" + filename, filename);
+    //sim->start();
     delete(sim);
     return 0;
 }

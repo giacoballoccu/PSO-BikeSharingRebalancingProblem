@@ -44,33 +44,78 @@ double Swarm::generateFitnessValue(vector<double> currentSolution, BikeRebalanci
     vector<Vehicle> veh = brm.getVehicles();
     int currentCapacity = 0;
     int maxCapacity = 0;
-    for(Vehicle x : veh){
+    for (Vehicle x : veh) {
         maxCapacity += x.getCapacity();
-        currentCapacity += x.getCapacity()/2;
     }
+    map<int, Station> pickupStations = brm.pickupStations;
+    map<int, Station> dropoffStations = brm.dropoffStations;
+    currentCapacity = maxCapacity;
     //return the value of objective function
     for (int i = 0; i < currentSolution.size(); i++) {
         int v = (int) round(currentSolution[i]);
+        double distanceFromDepot = distanceMatrix[prevStation][0];
         int stationDemand = s[v].getDemand();
-        if(stationDemand == 0) continue;
-        if(currentCapacity - stationDemand < 0) {
-            int residualCapacity = maxCapacity - currentCapacity;
-            s[v].setDemand(stationDemand - residualCapacity);
-            fitnessSum += distanceMatrix[v][0];
-            fitnessSum += distanceMatrix[0][v];
-            currentCapacity = maxCapacity;
-            i--;
-            continue;
-        }else if(currentCapacity - stationDemand > maxCapacity){
-            int residualCapacity = maxCapacity - currentCapacity;
-            s[v].setDemand(stationDemand + residualCapacity);
-            fitnessSum += distanceMatrix[v][0];
-            fitnessSum += distanceMatrix[0][v];
-            currentCapacity = 0;
-            i--;
-            continue;
+        if (stationDemand == 0) continue;
+        if (currentCapacity - stationDemand < 0) {
+            int bestCandidate = 0;
+            double bestDistance = distanceFromDepot;
+            for (int j = i + 1; j < currentSolution.size(); j++) {
+                if (pickupStations.empty() or bestDistance == 0) break;
+                int station_value = (int) round(currentSolution[j]);
+                if (pickupStations.count(station_value) != 0) {
+                    Station currentCandidate = pickupStations[station_value];
+                    double distanceFromCandidate = distanceMatrix[prevStation][station_value];
+                    if (currentCapacity - currentCandidate.getDemand() <= maxCapacity and distanceFromCandidate <= bestDistance) {
+                        bestCandidate = j;
+                        bestDistance = distanceFromCandidate;
+                    }
+                }
+            }
+            if (bestCandidate == 0) {
+                //Then come back to deposit
+                fitnessSum += distanceFromDepot;
+                prevStation = 0;
+                currentCapacity = (currentCapacity + maxCapacity/3 > maxCapacity) ? maxCapacity : currentCapacity + maxCapacity/3;
+                i--;
+                continue;
+            } else {
+                if (s[currentSolution[i]].getDemand() < 0) pickupStations[currentSolution[i]] = s[currentSolution[i]];
+                swap(currentSolution[i], currentSolution[bestCandidate]);
+                pickupStations.erase(currentSolution[bestCandidate]);
+                i--;
+                continue;
+            }
+
+        } else if (currentCapacity - stationDemand > maxCapacity) {
+            int bestCandidate = 0;
+            double bestDistance = distanceFromDepot;
+            for (int j = i + 1; j < currentSolution.size(); j++) {
+                if (dropoffStations.empty() or bestDistance == 0) break;
+                int station_value = (int) round(currentSolution[j]);
+                if (dropoffStations.count(station_value) != 0) {
+                    Station currentCandidate = dropoffStations[station_value];
+                    double distanceFromCandidate = distanceMatrix[prevStation][station_value];
+                    if (currentCapacity - currentCandidate.getDemand() >= 0 and distanceFromCandidate <= bestDistance) {
+                        bestCandidate = j;
+                        bestDistance = distanceFromCandidate;
+                    }
+                }
+            }
+            if (bestCandidate == 0) {
+                fitnessSum += distanceFromDepot;
+                prevStation = 0;
+                currentCapacity = (currentCapacity - maxCapacity/3 < 0) ? 0 : currentCapacity - maxCapacity/3;
+                i--;
+                continue;
+            } else {
+                if (s[currentSolution[i]].getDemand() > 0) dropoffStations[currentSolution[i]] = s[currentSolution[i]];
+                swap(currentSolution[i], currentSolution[bestCandidate]);
+                pickupStations.erase(currentSolution[bestCandidate]);
+                i--;
+                continue;
+            }
         }
-        currentCapacity -= stationDemand;
+        currentCapacity = currentCapacity - stationDemand;
         fitnessSum += distanceMatrix[prevStation][v];
         prevStation = v;
     }
@@ -79,6 +124,7 @@ double Swarm::generateFitnessValue(vector<double> currentSolution, BikeRebalanci
 
     return fitnessSum;
 }
+
 
 void Swarm::findGlobalBest() {
     for (Particle p: particles) {
@@ -154,7 +200,7 @@ void Swarm::updateVelocity(Particle p) {
     double b1 = 0.3;
 
     double o2 = 0.2;
-    double b2 = 0.5;
+    double b2 = 0.3;
 
     vector<double> newV = vector<double>(p.getPVelocity().size());
 
@@ -191,7 +237,8 @@ vector<int> Swarm::decodeOptimalSolution() {
             indicies[globalBest[i]].push_back(i);
     }
 
-    sort(globalBest.begin(), globalBest.end());
+    return PSOutils::copyVecDoubleToVecInt(globalBest);
+    /*sort(globalBest.begin(), globalBest.end());
 
     vector<int> optimalRoute = vector<int>(globalBest.size());
 
@@ -208,5 +255,5 @@ vector<int> Swarm::decodeOptimalSolution() {
             optimalRoute[i] = indicies[globalBest[i]][0] + 1;
     }
 
-    return optimalRoute;
+    return optimalRoute;*/
 }
