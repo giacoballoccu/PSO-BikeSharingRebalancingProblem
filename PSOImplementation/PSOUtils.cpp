@@ -22,6 +22,7 @@ namespace PSOutils{
     }
     // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
     void PSOutils::KnuthShuffle(vector<int>& arr){
+        /* initialize random seed: */
         for (int i = arr.size() - 1; i > 0; i--){
             int index = rand() % i;
             swap(arr[index], arr[i]);

@@ -1,6 +1,6 @@
 #include "Simulator.h"
-#include "BikeSharingRebalancingModel/BikeRebalancingModel.h"
-#include "PSOImplementation/Swarm.h"
+#include "BikeRebalancingModel.h"
+#include "../PSOImplementation/Swarm.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -41,12 +41,10 @@ int Simulator::start(string path, string log) {
     unordered_map<string, unordered_map<double, double>> particleProgress;
 
     //print iteration 0 results
-    /*
-    cout << "Iteration\t";
+    /*cout << "Iteration\t";
     for(int i=0; i<swarm.getParticles().size(); i++)
         cout << "f(x:"+ to_string(i+1) + ") f(pBest:"+ to_string(i+1) + ")\t";
-    */
-    cout << "f(gBest)" << "\n";
+    cout << "f(gBest)" << "\n";*/
     //swarm.printIterationResults(0, particleProgress);
 
 

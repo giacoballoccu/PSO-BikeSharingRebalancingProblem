@@ -1,9 +1,9 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-#include "BikeSharingRebalancingModel/BikeRebalancingModel.h"
-#include "PSOImplementation/Swarm.h"
-#include "PSOImplementation/PSOUtils.h"
+#include "BikeRebalancingModel.h"
+#include "../PSOImplementation/Swarm.h"
+#include "../PSOImplementation/PSOUtils.h"
 using namespace std;
 
 class Simulator
@@ -15,8 +15,8 @@ public:
     int noOfStations = 8;
     int noOfVehicles = 1;
     int MAXIMUM_STATION_DEMAND = 10;
-    int N_PARTICLES = 100000;
-    int N_ITERATIONS = 1000;
+    int N_PARTICLES = 10000;
+    int N_ITERATIONS = 1500;
     vector<int> vehicleCapacity = {15};
 };
 

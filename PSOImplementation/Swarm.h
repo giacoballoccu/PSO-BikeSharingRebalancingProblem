@@ -9,8 +9,8 @@
 #include "stdio.h"
 #include "iostream"
 #include "math.h"
-#include "PSOImplementation/Particle.h"
-#include "BikeSharingRebalancingModel/BikeRebalancingModel.h"
+#include "Particle.h"
+#include "../BikeSharingRebalancingModel/BikeRebalancingModel.h"
 
 
 using namespace std;

@@ -194,19 +194,19 @@ void Swarm::optimizeSolutions(BikeRebalancingModel& brm) {
 
 void Swarm::updateVelocity(Particle p) {
 
-    double w = 0.6;
+    double w = 0.6; //Inertia factor
 
-    double o1 = 0.2;
-    double b1 = 0.3;
+    double c1 = 0.2; //Cognitive Component
+    double r1 = 0.3;
 
-    double o2 = 0.2;
-    double b2 = 0.3;
+    double c2 = 0.2; //Social Component
+    double r2 = 0.3;
 
     vector<double> newV = vector<double>(p.getPVelocity().size());
 
     for (int i = 0; i < newV.size(); i++) {
-        newV[i] = w * p.getPVelocity()[i] + (o1 * b1 * (p.getPBest()[i] - p.getXSolution()[i])) +
-                  (o2 * b2 * (globalBest[i] - p.getXSolution()[i]));
+        newV[i] = w * p.getPVelocity()[i] + (c1 * r1 * (p.getPBest()[i] - p.getXSolution()[i])) +
+                  (c2 * r2 * (globalBest[i] - p.getXSolution()[i]));
     }
 
     p.setPVelocity(newV);
