@@ -3,7 +3,7 @@ from array import array
 import networkx as nx
 import matplotlib.pyplot as plt
 def read_nodes():
-    with open('.nodes.txt') as f:
+    with open('GraphVisualizer/.nodes.txt') as f:
         lines = f.readlines()
         nodes = {}
         for idx, line in enumerate(lines):
@@ -18,7 +18,7 @@ def read_nodes():
     return nodes
 def read_edges():
     optimal_route_str = "0"
-    with open('.edges.txt') as f:
+    with open('GraphVisualizer/.edges.txt') as f:
         line = f.readlines()[-1].split()
         edges = []
         for i in range(0,len(line)-1, 2):
